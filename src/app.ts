@@ -20,7 +20,7 @@ export class App {
     }
 
     routing() {
-        this.app.use('/', router );
+        this.app.use('/api/', router );
     }
 
     async lisen() {
