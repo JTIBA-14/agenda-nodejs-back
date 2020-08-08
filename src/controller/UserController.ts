@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
 import HttpStatus from 'http-status-codes';
 import User from './../models/User';
 
@@ -54,12 +55,21 @@ export class UserController {
                 message: 'Error internal server' 
             });
         }
+
+        // hash - encryption password
+        const salt = bcrypt.genSaltSync(10);
+        data.password = bcrypt.hashSync( data.password, salt);
         
         try {
             const user = await User.create( data );
             return res.status(HttpStatus.CREATED).json({
                 message: 'User create correct!!',
-                user,
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    username: user.username,
+                    rol: user.rol
+                },
             });
 
         } catch (error) {
